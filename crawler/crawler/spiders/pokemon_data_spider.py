@@ -14,37 +14,40 @@ class PokemonDataSpider(scrapy.Spider):
 
     def parse(self, response):
         for pokemon in response.css('main.main-content.grid-container'):
-            data = {}
-            data['name'] = pokemon.css('h1::text').get()
-            data['type'] = pokemon.css('table.vitals-table > tbody > tr:nth-child(2) > td')[0].css('a.type-icon::text').getall()
-            data['base_exp'] = int(pokemon.css('table.vitals-table > tbody > tr:nth-child(4) > td::text')[1].get())
-            data['base_stats'] = {}
-            data['base_stats']['hp'] = int(pokemon.css('table.vitals-table > tbody > tr:first-child > td.cell-num::text').get())
-            data['base_stats']['attack'] = int(pokemon.css('table.vitals-table > tbody > tr:nth-child(2) > td.cell-num::text').get())
-            data['base_stats']['defense']= int(pokemon.css('table.vitals-table > tbody > tr:nth-child(3) > td.cell-num::text').get())
-            data['base_stats']['attack_speed']= int(pokemon.css('table.vitals-table > tbody > tr:nth-child(4) > td.cell-num::text').get())
-            data['base_stats']['defense_speed'] = int(pokemon.css('table.vitals-table > tbody > tr:nth-child(5) > td.cell-num::text').get())
-            data['base_stats']['speed'] = int(pokemon.css('table.vitals-table > tbody > tr:nth-child(6) > td.cell-num::text').get())
-            data['base_stats']['total'] = int(pokemon.css('table.vitals-table > tfoot > tr > td.cell-total > b::text').get())
-            data['type_defenses'] = {}
-            data['type_defenses']['normal'] = int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(1)::attr(class)').get()[21:])/100
-            data['type_defenses']['fire'] = int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(2)::attr(class)').get()[21:])/100
-            data['type_defenses']['water'] = int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(3)::attr(class)').get()[21:])/100
-            data['type_defenses']['electric'] = int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(4)::attr(class)').get()[21:])/100
-            data['type_defenses']['grass'] = int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(5)::attr(class)').get()[21:])/100
-            data['type_defenses']['ice'] = int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(6)::attr(class)').get()[21:])/100
-            data['type_defenses']['fighting'] = int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(7)::attr(class)').get()[21:])/100
-            data['type_defenses']['poison'] = int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(8)::attr(class)').get()[21:])/100
-            data['type_defenses']['ground'] = int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(9)::attr(class)').get()[21:])/100
-            data['type_defenses']['flying'] = int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(1)::attr(class)').get()[21:])/100
-            data['type_defenses']['psychic'] = int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(2)::attr(class)').get()[21:])/100
-            data['type_defenses']['bug'] = int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(3)::attr(class)').get()[21:])/100
-            data['type_defenses']['rock'] = int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(4)::attr(class)').get()[21:])/100
-            data['type_defenses']['ghost'] = int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(5)::attr(class)').get()[21:])/100
-            data['type_defenses']['dragon'] = int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(6)::attr(class)').get()[21:])/100
-            data['type_defenses']['dark'] = int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(7)::attr(class)').get()[21:])/100
-            data['type_defenses']['steel'] = int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(8)::attr(class)').get()[21:])/100
-            data['type_defenses']['fairy'] = int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(9)::attr(class)').get()[21:])/100
+            data = {
+                'name': pokemon.css('h1::text').get(),
+                'type': pokemon.css('table.vitals-table > tbody > tr:nth-child(2) > td')[0].css('a.type-icon::text').getall(),
+                'base_exp': int(pokemon.css('table.vitals-table > tbody > tr:nth-child(4) > td::text')[1].get()),
+                'base_stats': {
+                    'hp': int(pokemon.css('table.vitals-table > tbody > tr:first-child > td.cell-num::text').get()),
+                    'attack': int(pokemon.css('table.vitals-table > tbody > tr:nth-child(2) > td.cell-num::text').get()),
+                    'defense': int(pokemon.css('table.vitals-table > tbody > tr:nth-child(3) > td.cell-num::text').get()),
+                    'attack_speed': int(pokemon.css('table.vitals-table > tbody > tr:nth-child(4) > td.cell-num::text').get()),
+                    'defense_speed': int(pokemon.css('table.vitals-table > tbody > tr:nth-child(5) > td.cell-num::text').get()),
+                    'speed': int(pokemon.css('table.vitals-table > tbody > tr:nth-child(6) > td.cell-num::text').get()),
+                    'total': int(pokemon.css('table.vitals-table > tfoot > tr > td.cell-total > b::text').get()),
+                },                
+                'type_defenses': {
+                    'normal': int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(1)::attr(class)').get()[21:])/100,
+                    'fire': int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(2)::attr(class)').get()[21:])/100,
+                    'water': int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(3)::attr(class)').get()[21:])/100,
+                    'electric': int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(4)::attr(class)').get()[21:])/100,
+                    'grass': int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(5)::attr(class)').get()[21:])/100,
+                    'ice': int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(6)::attr(class)').get()[21:])/100,
+                    'fighting': int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(7)::attr(class)').get()[21:])/100,
+                    'poison': int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(8)::attr(class)').get()[21:])/100,
+                    'ground': int(pokemon.css('table.type-table-pokedex > tr')[1].css('td:nth-child(9)::attr(class)').get()[21:])/100,
+                    'flying': int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(1)::attr(class)').get()[21:])/100,
+                    'psychic': int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(2)::attr(class)').get()[21:])/100,
+                    'bug': int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(3)::attr(class)').get()[21:])/100,
+                    'rock': int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(4)::attr(class)').get()[21:])/100,
+                    'ghost': int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(5)::attr(class)').get()[21:])/100,
+                    'dragon': int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(6)::attr(class)').get()[21:])/100,
+                    'dark': int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(7)::attr(class)').get()[21:])/100,
+                    'steel': int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(8)::attr(class)').get()[21:])/100,
+                    'fairy': int(pokemon.css('table.type-table-pokedex:nth-child(2) > tr')[1].css('td:nth-child(9)::attr(class)').get()[21:])/100,
+                },
+            }
             data['moves'] = []
             for move in pokemon.css('table.data-table')[0].css('tbody > tr'):
                 if (move.css('td.cell-icon.text-center::attr(data-filter-value)').get() != 'status') & (move.css('td.cell-num::text')[1].get() != '—'):

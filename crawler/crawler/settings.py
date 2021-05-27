@@ -90,8 +90,8 @@ ROBOTSTXT_OBEY = True
 # UTF-8 encoding (enabled by default)
 FEED_EXPORT_ENCODING = 'utf-8'
 
-# Enable item duplication filtering (disabled by default)
+# Enable item duplication filtering (enabled by default)
 # See the code in `pipelines.py`, which currently filtering duplicate `name`
-#ITEM_PIPELINES = {
-#    'crawler.pipelines.DuplicatesPipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'crawler.pipelines.DuplicatesPipeline': 300,
+}

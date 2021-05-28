@@ -1,4 +1,5 @@
 import random
+import json
 class Pokemon:
     def __init__(self, pokemon, level):
         self.name = pokemon['name']
@@ -57,10 +58,15 @@ class Pokemon:
         else:
             print('You need '+(self.exp_level_up - self.exp)+' more XP to reach next level\n')
     
+    def to_json(self):
+        return json.dumps(self.__dict__)
     
-
+    
+"""
 import json
 pokemon_data_json = open('pokemon_data.json')
 pokemon_data = json.load(pokemon_data_json)
+pokemon_data_json.close()
 poke1 = Pokemon(pokemon_data[random.randint(0,len(pokemon_data))], 5)
 print(json.dumps(poke1.__dict__))
+"""

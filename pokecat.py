@@ -13,16 +13,18 @@ class PokeCat:
         self.camera =[0, 0]
     
     def set_up(self):
-        player = Player(3, 3)
+        player = Player(8, 8)
+        player1 = Player(9, 9)
         self.player = player
         self.objects.append(player)
+        self.objects.append(player1)
         print('do set up')
         self.game_state = GameState.RUNNING
         
         self.load_map('map1')
 
     def update(self):
-        self.screen.fill(config.BLACK)
+        self.screen.fill(config.GREEN)
         print('update')
 
         self.handle_events()
@@ -33,6 +35,7 @@ class PokeCat:
             object.render(self.screen, self.camera)
 
     def handle_events(self):
+        keys = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.game_state = GameState.ENDED
@@ -41,14 +44,14 @@ class PokeCat:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.game_state = GameState.ENDED
-                elif event.key == pygame.K_w: #  up
-                    self.move_unit(self.player, [0, -1])
-                elif event.key == pygame.K_s: #  down
-                    self.move_unit(self.player, [0, 1])
-                elif event.key == pygame.K_a: #  left
-                    self.move_unit(self.player, [-1, 0])
-                elif event.key == pygame.K_d: #  right
-                    self.move_unit(self.player, [1, 0])
+        if keys[pygame.K_UP]: #  up
+            self.move_unit(self.player, [0, -1])
+        if keys[pygame.K_DOWN]: #  down
+            self.move_unit(self.player, [0, 1])
+        if keys[pygame.K_LEFT]: #  left
+            self.move_unit(self.player, [-1, 0])
+        if keys[pygame.K_RIGHT]: #  right
+            self.move_unit(self.player, [1, 0])
     
     def load_map(self, file_name):
         with open('maps/' + file_name + '.txt') as map_file:
@@ -109,6 +112,8 @@ class PokeCat:
             return
         elif self.map[new_position[1]][new_position[0]] == 'P12':
             return
+        elif self.map[new_position[1]][new_position[0]] == 'T':
+            return
         elif self.map[new_position[1]][new_position[0]] == 'T1':
             return
         elif self.map[new_position[1]][new_position[0]] == 'T2':
@@ -150,6 +155,9 @@ map_tile_image = {
     'B1' : pygame.transform.scale(pygame.image.load('imgs/bush1.png'), (config.SCALE, config.SCALE)),
     'B2' : pygame.transform.scale(pygame.image.load('imgs/bush2.png'), (config.SCALE, config.SCALE)),
     'B3' : pygame.transform.scale(pygame.image.load('imgs/bush3.png'), (config.SCALE, config.SCALE)),
+    'BR1' : pygame.transform.scale(pygame.image.load('imgs/bridge1.png'), (config.SCALE, config.SCALE)),
+    'BR2' : pygame.transform.scale(pygame.image.load('imgs/bridge2.png'), (config.SCALE, config.SCALE)),
+    'BR3' : pygame.transform.scale(pygame.image.load('imgs/bridge3.png'), (config.SCALE, config.SCALE)),
     'G1' : pygame.transform.scale(pygame.image.load('imgs/grass1.png'), (config.SCALE, config.SCALE)),
     'G2' : pygame.transform.scale(pygame.image.load('imgs/grass2.png'), (config.SCALE, config.SCALE)),
     'G3' : pygame.transform.scale(pygame.image.load('imgs/grass3.png'), (config.SCALE, config.SCALE)),
@@ -189,6 +197,7 @@ map_tile_image = {
     'P10' : pygame.transform.scale(pygame.image.load('imgs/pond10.png'), (config.SCALE, config.SCALE)),
     'P11' : pygame.transform.scale(pygame.image.load('imgs/pond11.png'), (config.SCALE, config.SCALE)),
     'P12' : pygame.transform.scale(pygame.image.load('imgs/pond12.png'), (config.SCALE, config.SCALE)),
+    'T' : pygame.transform.scale(pygame.image.load('imgs/tree.png'), (config.SCALE, config.SCALE)),
     'T1' : pygame.transform.scale(pygame.image.load('imgs/tree1.png'), (config.SCALE, config.SCALE)),
     'T2' : pygame.transform.scale(pygame.image.load('imgs/tree2.png'), (config.SCALE, config.SCALE)),
     'T3' : pygame.transform.scale(pygame.image.load('imgs/tree3.png'), (config.SCALE, config.SCALE)),

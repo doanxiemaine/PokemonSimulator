@@ -1,7 +1,8 @@
 import socket
 from _thread import *
 import pickle
-from Combat import *
+#from Combat import *
+from camera import Combat
 
 server = socket.gethostname()
 port = 5555
@@ -35,10 +36,13 @@ def threaded_client(conn, p, gameId):
                 if not data:
                     break
                 else:
-                    if data == "reset":
-                        game.resetWent()
+                    if data == "init":
+                        game.get_pokemon(p)
+                    elif data == "surrender":
+                        game.surrender(p)
                     elif data != "get":
-                        game.player_data(p, data)
+                        game.play(p, data)
+                        game.check_winner()
                     conn.sendall(pickle.dumps(game))
             else:
                 break

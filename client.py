@@ -32,17 +32,19 @@ def main():
                 break
             if game.turn == player:
                 if player == 0:
+                    if game.dmg[1] != 0:
+                        print("Opponent dealt", game.dmg[1], "damage!!!")
                     print("Your HP:", game.player1['stats']['hp'], "Opponent's HP:", game.player2['stats']['hp'])
                 else:
+                    if game.dmg[0] != 0:
+                        print("Opponent dealt", game.dmg[0], "damage!!!")
                     print("Your HP:", game.player2['stats']['hp'], "Opponent's HP:", game.player1['stats']['hp'])
                 game.get_move(player)
-                player_move = input("Choose your move")
+                player_move = input("Choose your move: ")
                 if player_move == "quit":
                     n.send("surrender")
                 else:
                     n.send(player_move)
-            else:
-                print("wait for player...")
 
 
 

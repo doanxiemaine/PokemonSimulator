@@ -93,7 +93,7 @@ class Combat:
                         if total <= 0:
                             total = 0
                         self.player2['hp'] = self.player2['stats']['hp'] - total
-                        self.dmg[0] = dmg - defense
+                        self.dmg[0] = total
             self.turn = 1
 
 
@@ -112,7 +112,7 @@ class Combat:
                         if total <= 0:
                             total = 0
                         self.player1['stats']['hp'] = self.player1['stats']['hp'] - total
-                        self.dmg[1] = dmg - defense
+                        self.dmg[1] = total
             self.turn = 0
 
     def check_winner(self):

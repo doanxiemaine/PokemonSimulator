@@ -1,8 +1,7 @@
 import socket
 from _thread import *
 import pickle
-#from Combat import *
-from camera import Combat
+from Combat import *
 
 server = socket.gethostname()
 port = 5555

@@ -9,6 +9,9 @@ class Combat:
         self.player1 = {}
         self.player2 = {}
         self.winner = -1
+       
+    def get_turn(self):
+        return self.turn
 
     def get_pokemon(self, player):
         with open('trainer_data.json', 'r') as read_file:

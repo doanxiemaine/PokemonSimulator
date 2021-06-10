@@ -87,13 +87,10 @@ class Combat:
             else:
                 for i in self.player2['type_defenses']:
                     if type2 == i:
-                        dmg = self.player1['stats']['attack'] * self.player2['type_defense'][i]
+                        dmg = move_details['power'] * self.player2['type_defense'][i]
                         defense = self.player2['stats']['defense']
-                        total = dmg - defense
-                        if total <= 0:
-                            total = 0
-                        self.player2['hp'] = self.player2['stats']['hp'] - total
-                        self.dmg[0] = totala
+                        self.player2['hp'] = self.player2['stats']['hp'] - (dmg - defense)
+                        self.dmg[0] = dmg - defense
             self.turn = 1
 
 
@@ -106,13 +103,10 @@ class Combat:
             else:
                 for i in self.player1['type_defenses']:
                     if type2 == i:
-                        dmg = self.player2['stats']['attack'] * self.player1['type_defense'][i]
+                        dmg = move_details['power'] * self.player1['type_defense'][i]
                         defense = self.player2['stats']['defense']
-                        total = dmg - defense
-                        if total <= 0:
-                            total = 0
-                        self.player1['stats']['hp'] = self.player1['stats']['hp'] - total
-                        self.dmg[1] = total
+                        self.player1['stats']['hp'] = self.player1['stats']['hp'] - (dmg - defense)
+                        self.dmg[1] = dmg - defense
             self.turn = 0
 
     def check_winner(self):

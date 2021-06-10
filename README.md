@@ -6,8 +6,8 @@ A Net-centric programming course project.
 This is an effort of making an online multiplayer Pokémon copy using TCP programming, written in Python 3.
 Shoutout to Tech with Tim (@techwithtim) for the amazing guide videos on Network and Socket Programming.
 
-PokeCat Reference: https://github.com/techwithtim/Pictonary-Livestream
-PokeBat Reference: https://www.techwithtim.net/tutorials/python-online-game-tutorial/
+* PokeCat Reference: https://github.com/techwithtim/Pictonary-Livestream
+* PokeBat Reference: https://www.techwithtim.net/tutorials/python-online-game-tutorial/
 
 # Installation
 -------------

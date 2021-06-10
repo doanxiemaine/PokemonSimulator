@@ -5,7 +5,8 @@
     2   :   Load trainers positions
     3   :   Load current trainer pos
     4   :   Update position to server
-
+    5   :   Player exit game
+    6   :   Load wild pokemon spawn
 }
 
         CLIENT                                                  SERVER

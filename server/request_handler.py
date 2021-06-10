@@ -46,7 +46,7 @@ class Server():
                         send_msg[1] = send
 
                     if key == 2:  # get game, returns a list of players
-                        send = self.world.get_trainers_pos()
+                        send = self.world.get_trainers_pos(trainer)
                         send_msg[2] = send
                     
                     if key == 3:  # get game, returns a list of players
@@ -56,6 +56,19 @@ class Server():
                     if key == 4:  # get game, returns a list of players
                         print(data['4'][:3])
                         trainer.set_pos(data['4'][:3])
+                        self.world.check_exist_pokemon(trainer, data['4'][:3])
+                    
+                    if key == 5:  # get game, returns a list of players
+                        self.world.trainers.remove(trainer)
+                    
+                    if key == 6:
+                        self.world.spawn_wild_pokemons_pos()
+                        if trainer.check_new_pokemon():
+                            send = trainer.get_new_pokemon_info()
+                            send_msg[6] = send
+                        else:
+                            send_msg[6] = []
+                        
 
                 send_msg = json.dumps(send_msg)
                 print(send_msg)
@@ -71,18 +84,26 @@ class Server():
         :param ip: str
         :return: None
         """
+        accounts_json = open('accounts.json', 'r')
+        accounts = json.load(accounts_json)
+        accounts_json.close()
         try:
             data = conn.recv(1024)
             name = str(data.decode())
             if not name:
                 raise Exception("No name received")
+            if name not in accounts:
+                conn.sendall(str.encode('-1')) # Response code for login failed
+                
+            else:
+                conn.sendall(str.encode('1')) # Response Code for Connected Client
 
-            conn.sendall("1".encode())
+                #conn.sendall("1".encode())
 
-            trainer = Trainer(addr, name)
-            trainer.generate_pokemon(random.randint(1, 4))
-            thread = threading.Thread(target=self.player_thread, args=(conn, trainer))
-            thread.start()
+                trainer = Trainer(addr, name)
+                trainer.generate_pokemon(random.randint(1, 4))
+                thread = threading.Thread(target=self.player_thread, args=(conn, trainer))
+                thread.start()
         except Exception as e:
             print("[EXCEPTION]", e)
             conn.close()

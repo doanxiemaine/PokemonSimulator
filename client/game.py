@@ -7,6 +7,7 @@ import json
 import time as t
 from os import path
 import sys
+import random
 
 map_tile_image = {
     'B1': pygame.transform.scale(pygame.image.load('../imgs/bush1.png'), (config.SCALE, config.SCALE)),
@@ -45,47 +46,18 @@ class PokeCat:
         pygame.key.set_repeat(200, 100)
         self.load_map()
         self.game_state = GameState.RUNNING
-        """self.objects = []
-        self.others = []
-        self.game_state = GameState.NONE
-        self.map = []"""
+        self.auto = False
+        self.paused = False
         self.camera = [0, 0]
+        self.poke_spawn = []
     
     def set_up(self):
         print('do set up')        
-        """trainers_pos = self.connection.send({0:[]})
-        self.objects += trainers_pos
-        current_trainer = self.connection.send({1:[]})
-        self.current_trainer = current_trainer"""
-        #map = self.connection.send({-1:[]})
-        #self.map = map
         current_trainer_pos = self.connection.send({3:[]})
         print(current_trainer_pos)
         self.player = Player(self, current_trainer_pos[0], current_trainer_pos[1])
-        """for row, tiles in enumerate(self.map):
-            for col, tile in enumerate(tiles):
-                if tile == '1':
-                    Wall(self, col, row)"""
-
-        """self.player = Player(current_trainer_pos[0], current_trainer_pos[1])
-        self.objects.append(self.player)
-        self.load_map()
-        self.game_state = GameState.RUNNING"""
 
     def load_map(self):
-        """map2_json = open('../maps/map2.json', 'r')
-        map2 = json.load(map2_json)
-        map2_json.close()
-        count = 0
-        for line in map2:
-            if count > 2:
-                break
-            tiles = []
-            for teritory in line:
-                tiles.append(teritory)
-
-            self.map.append(tiles)
-            count += 1"""
         game_folder = path.dirname(__file__)
         self.map = []
         #print(self.map)
@@ -109,41 +81,50 @@ class PokeCat:
     def quit(self):
         self.game_state = GameState.ENDED
         pygame.quit()
+        self.connection.send({5:[]})
+        self.connection.client.close()
         sys.exit()
     
+    def draw_text(self, text, font_name, size, color, x, y, align="center"):
+        font = pygame.font.SysFont(font_name, size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect()
+        if align == "nw":
+            text_rect.topleft = (x, y)
+        if align == "ne":
+            text_rect.topright = (x, y)
+        if align == "sw":
+            text_rect.bottomleft = (x, y)
+        if align == "se":
+            text_rect.bottomright = (x, y)
+        if align == "n":
+            text_rect.midtop = (x, y)
+        if align == "s":
+            text_rect.midbottom = (x, y)
+        if align == "e":
+            text_rect.midright = (x, y)
+        if align == "w":
+            text_rect.midleft = (x, y)
+        if align == "center":
+            text_rect.center = (x, y)
+        self.screen.blit(text_surface, text_rect)
+
     def update(self):
         # update portion of the game loop
         self.other_players_pos = self.connection.send({2:[]})
+        self.poke_spawn = self.connection.send({6:[]})
+        print(self.poke_spawn)
+        if self.poke_spawn != []:
+            self.paused = True
+            text = f"New Pokemon: \nName: {self.poke_spawn['name']}\nLevel: {self.poke_spawn['level']}"
+            self.draw_text(text, 'comicsans', 105, config.BLACK, config.SCREEN_WIDTH / 2, config.SCREEN_HEIGHT / 2)
+            t.sleep(2)
+            self.paused = False
 
-        
-        
+        if self.auto:
+            t.sleep(1)
+            self.player.move([random.randint(-1, 2), random.randint(-1, 2)])
 
-    """def update(self):
-        self.screen.fill(config.GREEN)
-        print('update')
-
-        self.handle_events()
-
-        self.render_map(self.screen)
-        for object in self.objects:
-            object.render(self.screen, self.camera)
-        #otherslist = self.connection.send({2:self.others})
-        #self.others = self.non_match_elements(otherslist, self.objects)
-        self.draw_others()
-        #self.connection.send({4:self.others})
-        
-        
-        #for other in self.others:
-        #    Player(other[0],other[1]).render(self.screen, self.camera)
-        #"""
-    
-    """def draw_others(self):
-        for other in self.others:            
-            rect = pygame.Rect((other[0] - self.camera[0]) * config.SCALE, (other[1] - self.camera[1]) * config.SCALE, config.SCALE, config.SCALE)
-            image = pygame.image.load("../imgs/trainer1.png")
-            image = pygame.transform.scale(image, (config.SCALE, config.SCALE))
-            self.screen.blit(image, rect)"""
-    
     def draw(self):
         self.screen.fill(config.BGCOLOR)
         self.render_map(self.screen)
@@ -173,41 +154,10 @@ class PokeCat:
                     self.player.move([0, -1])
                 if event.key == pygame.K_DOWN:
                     self.player.move([0, 1])
+                if event.key == pygame.K_EQUALS:
+                    self.auto = not self.auto
         self.connection.send({4:self.player.get_pos()})
-        #self.player.render(self.screen, self.camera)
 
-    """def handle_events(self):
-        keys = pygame.key.get_pressed()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.game_state = GameState.ENDED
-            
-            #   handle key events
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.game_state = GameState.ENDED
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        self.game_state = GameState.ENDED
-                    elif event.key == pygame.K_UP: # up
-                        self.move_unit(self.player, [0, -1])
-                    elif event.key == pygame.K_DOWN: # down
-                        self.move_unit(self.player, [0, 1])
-                    elif event.key == pygame.K_LEFT: # left
-                        self.move_unit(self.player, [-1, 0])
-                    elif event.key == pygame.K_RIGHT: # right
-                        self.move_unit(self.player, [1, 0])
-            """"""if keys[pygame.K_UP]: #  up
-                self.move_unit(self.player, [0, -1])
-            if keys[pygame.K_DOWN]: #  down
-                self.move_unit(self.player, [0, 1])
-            if keys[pygame.K_LEFT]: #  left
-                self.move_unit(self.player, [-1, 0])
-            if keys[pygame.K_RIGHT]: #  right
-                self.move_unit(self.player, [1, 0])""""""
-        otherslist = self.connection.send({2:self.others})
-        self.others = self.non_match_elements(otherslist, self.objects)
-        self.connection.send({4:self.others})"""
     def render_map(self, screen):
         self.determine_camera()
 
@@ -303,11 +253,3 @@ class PokeCat:
             self.camera[0] = 0
         else:
             self.camera[0] = max_x_position
-
-    
-    
-    """def run(self):
-        running = True
-        pygame.init()
-        pygame.display.set_caption('Pokémon')
-        clock = pygame.time.Clock()"""

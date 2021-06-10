@@ -9,7 +9,7 @@ class Network:
         self.port = 5556
         self.addr = (self.server, self.port)
         self.name = name
-        self.connect()
+        self.flag = self.connect()
 
     def connect(self):
         try:
@@ -18,7 +18,10 @@ class Network:
             return json.loads(self.client.recv(2048))
         except Exception as e:
             self.disconnect(e)
-
+    
+    def get_flag(self):
+        return self.flag
+    
     def send(self, data):
         try:
             self.client.send(json.dumps(data).encode())

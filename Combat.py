@@ -93,7 +93,7 @@ class Combat:
                         if total <= 0:
                             total = 0
                         self.player2['hp'] = self.player2['stats']['hp'] - total
-                        self.dmg[0] = total
+                        self.dmg[0] = totala
             self.turn = 1
 
 

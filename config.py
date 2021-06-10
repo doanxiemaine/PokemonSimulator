@@ -1,0 +1,9 @@
+# colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GREEN = (119, 194, 164)
+
+SCALE = 32
+
+SCREEN_HEIGHT = 640
+SCREEN_WIDTH = 640

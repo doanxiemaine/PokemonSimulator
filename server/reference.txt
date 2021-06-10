@@ -1,0 +1,43 @@
+{
+    -1  :   Load map
+    0   :   Load trainers
+    1   :   Load current trainer
+    2   :   Load trainers positions
+    3   :   Load current trainer pos
+    4   :   Update position to server
+    5   :   Player exit game
+    6   :   Load wild pokemon spawn
+}
+
+        CLIENT                                                  SERVER
+    Connect to server                   --->                    Generate random position for player
+    |                                                           |
+    |                                                           | Feed position
+    v                                                           v
+    Send {3: []}                        --->                    Load requesting player's position
+                                                                |
+                                                                |
+                                                                v
+Create self.player = Player object      <---                    Send position to client
+    |
+    |
+    v
+    Send {2: []}                        --->                    Load all players currently connecting
+                                                                |
+                                                                |
+                                                                v
+Create Player object for other players  <---                    Send positions to client, except the client
+    |
+    |
+    v
+    Player move<------------------------------------------------------------------------------------------------|
+    |                                                                                                           |
+    |                                                                                                           |
+    v                                                                                                           |
+Send {4: [{name: String, pos: [x, y]}]} --->                    Update to players position                      |
+                                                                |                                               |
+                                                                |                                               |
+                                                                v                                               |
+Update other players position on map    <---                    Send updated players position                   |
+    |                                                                                                           |
+    L___________________________________________________________________________________________________________|             
